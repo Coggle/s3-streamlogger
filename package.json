@@ -1,0 +1,28 @@
+{
+  "name": "s3-streamlogger",
+  "version": "0.0.1",
+  "description": "Stream for logging to s3 with rotated object names. Usable as a wiston-file stream. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coggle/s3-streamlogger.git"
+  },
+  "keywords": [
+    "winston",
+    "logging",
+    "s3"
+  ],
+  "author": "James Crosby <james@coggle.it>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coggle/s3-streamlogger/issues"
+  },
+  "homepage": "https://github.com/coggle/s3-streamlogger",
+  "dependencies": {
+    "strftime": "~0.8.2",
+    "aws-sdk": "^2.0.17"
+  }
+}
