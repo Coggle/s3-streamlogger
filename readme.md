@@ -5,7 +5,7 @@ new object name.
 
 ### Installation
 ```bash
-npm install --save s3-streamlogged
+npm install --save s3-streamlogger
 ```
 
 ### Usage
@@ -37,15 +37,15 @@ var s3stream = new S3SteamLogger({
     this.buffer_size   = options.buffer_size   || 10000;      // or every 10k, which ever is sooner
 
 
-#### bucket *required*
+#### bucket *(required)*
 Name of the S3 bucket to upload data to. Must exist.
 Can also be provided as the environment variable `BUCKET_NAME`.
 
-#### access_key_id *required*
+#### access_key_id *(required)*
 AWS access key ID, must have putObject permission on the specified bucket.
 Can also be provided as the environment variable `AWS_SECRET_ACCESS_KEY`.
 
-#### secret_access_key *required*
+#### secret_access_key *(required)*
 AWS secret key for the `access_key_id` specified.
 Can also be provided as the environment variable `AWS_SECRET_KEY_ID`.
 
