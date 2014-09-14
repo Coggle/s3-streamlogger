@@ -88,3 +88,6 @@ Files will be uploaded if the un-uploaded data exceeds `buffer_size` bytes.
 Defaults to 10 KB.
 
 
+### License
+[ISC](http://opensource.org/licenses/ISC): equivalent to 2-clause BSD.
+
