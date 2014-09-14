@@ -22,21 +22,6 @@ var s3stream = new S3SteamLogger({
 
 ### Options
 
-    if(!(options.bucket || process.env.BUCKET_NAME))
-        throw new Error("options.bucket or BUCKET_NAME environment variable is required");
-    if(!(options.access_key_id || process.env.AWS_SECRET_KEY_ID))
-        throw new Error("options.access_key_id or AWS_SECRET_KEY_ID environment variable is required");
-    if(!(options.secret_access_key || process.env.AWS_SECRET_ACCESS_KEY))
-        throw new Error("options.secret_access_key or AWS_SECRET_ACCESS_KEY environment variable is required");
-    
-    this.bucket        = options.bucket || process.env.BUCKET_NAME;
-    this.name_format   = options.name_format   || '%Y-%m-%d-%H-%M.log';
-    this.rotate_every  = options.rotate_every  || 60*60*1000; // default to 60 minutes
-    this.max_file_size = options.max_file_size || 200000      // or 200k, whichever is sooner
-    this.upload_every  = options.upload_every  || 20*1000;    // default to 20 seconds
-    this.buffer_size   = options.buffer_size   || 10000;      // or every 10k, which ever is sooner
-
-
 #### bucket *(required)*
 Name of the S3 bucket to upload data to. Must exist.
 Can also be provided as the environment variable `BUCKET_NAME`.
