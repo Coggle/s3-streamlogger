@@ -70,7 +70,7 @@ AWS secret key for the `access_key_id` specified.
 Can also be provided as the environment variable `AWS_SECRET_KEY_ID`.
 
 #### name_format
-Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M.log"`.
+Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
 
 #### rotate_every
 Files will be rotated every `rotate_every` milliseconds. Defaults to 3600000 (60

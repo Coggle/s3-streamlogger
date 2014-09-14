@@ -78,7 +78,19 @@ S3StreamLogger.prototype._newFile = function(){
     this.unwritten    = 0;
     this.file_started = new Date();
     this.last_write   = this.file_started;
-    this.object_name  = strftime(this.name_format, this.file_started);
+    // create a date object with the UTC version of the date to use with
+    // strftime, so that the commonly use formatters return the UTC values.
+    // This breaks timezone-converting specifers (as they will convert against
+    // the wrong timezone).
+    var date_as_utc = new Date(
+        this.file_started.getUTCFullYear(),
+        this.file_started.getUTCMonth(),
+        this.file_started.getUTCDate(),
+        this.file_started.getUTCHours(),
+        this.file_started.getUTCMinutes(),
+        this.file_started.getUTCSeconds()
+    );
+    this.object_name  = strftime(this.name_format, date_as_utc);
 }
 
 S3StreamLogger.prototype._write = function(chunk, encoding, cb){
