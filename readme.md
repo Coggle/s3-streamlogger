@@ -8,7 +8,7 @@ new object name.
 npm install --save s3-streamlogger
 ```
 
-### Usage
+### Basic Usage
 ```js
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
@@ -17,7 +17,43 @@ var s3stream = new S3SteamLogger({
         access_key_id: "...",
     secret_access_key: "..."
 });
+
+s3stream.write("hello S3");
 ```
+
+### Use with Winston: Log to S3
+```sh
+npm install --save winston
+npm install --save s3-streamlogger
+```
+
+```js
+var winston        = require('winston');
+var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+
+var s3_stream = new S3SteamLogger({
+             bucket: "mys3bucket",
+      access_key_id: "...",
+  secret_access_key: "..."
+});
+
+var logger = new (winston.Logger)({
+  transports: [
+    new (winston.transports.File)({
+      stream: s3_stream
+    })
+  ]
+});
+
+logger.info('Hello Winston!');
+logger.debug('Hello Winston!');
+```
+
+### Handling logging errors
+When there is an error writing to s3, the stream emits an 'error' event with
+details. You should take care **not** to log these errors back to the same
+stream (as that is likely to cause infinite recursion). Instead log them to the
+console, to a file, or to SNS using [winston-sns](https://github.com/jesseditson/winston-sns).
 
 
 ### Options
