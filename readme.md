@@ -46,7 +46,6 @@ var logger = new (winston.Logger)({
 });
 
 logger.info('Hello Winston!');
-logger.debug('Hello Winston!');
 ```
 
 ### Handling logging errors
@@ -77,7 +76,7 @@ Format of file names to create, accepts [strftime specifiers](https://github.com
 Files will be rotated every `rotate_every` milliseconds. Defaults to 3600000 (60
 minutes).
 
-#### max_file_sze
+#### max_file_size
 Files will be rotated when they reach `max_file_size` bytes. Defaults to 200 KB.
 
 #### upload_every
