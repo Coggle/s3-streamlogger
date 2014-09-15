@@ -97,8 +97,10 @@ S3StreamLogger.prototype._write = function(chunk, encoding, cb){
     if(typeof chunk === 'string')
         chunk = new Buffer(chunk, encoding);
     
-    if(chunk)
+    if(chunk){
         this.buffers.push(chunk);
+        this.unwritten += chunk.length;
+    }
 
     if(this.timeout)
         clearTimeout(this.timeout);
