@@ -16,7 +16,7 @@ function S3StreamLogger(options){
         throw new Error("options.secret_access_key or AWS_SECRET_ACCESS_KEY environment variable is required");
     
     this.bucket        = options.bucket || process.env.BUCKET_NAME;
-    this.name_format   = options.name_format   || '%Y-%m-%d-%H-%M.log';
+    this.name_format   = options.name_format   || '%Y-%m-%d-%H-%M-unknown-unknown.log';
     this.rotate_every  = options.rotate_every  || 60*60*1000; // default to 60 minutes
     this.max_file_size = options.max_file_size || 200000      // or 200k, whichever is sooner
     this.upload_every  = options.upload_every  || 20*1000;    // default to 20 seconds
