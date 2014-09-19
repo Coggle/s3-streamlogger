@@ -51,6 +51,17 @@ var logger = new (winston.Logger)({
 logger.info('Hello Winston!');
 ```
 
+### Add hostname information for tails3
+tails3 will expects messages to be logged as json (the default for the file
+transport), with hostname and (for critical errors), stack
+properties to each log object, in addition to the standard timestamp, level and message
+properties. You can provide these using the third "metadata" option to
+winston's log method:
+
+```js
+logger.log(level, message, {hostname: ... , stack: ...});
+```
+
 ### Handling logging errors
 When there is an error writing to s3, the stream emits an 'error' event with
 details. You should take care **not** to log these errors back to the same
