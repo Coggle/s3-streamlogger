@@ -1,4 +1,6 @@
 ## s3-streamlogger
+[![NPM version](https://badge.fury.io/js/s3-streamlogger.svg)](http://badge.fury.io/js/s3-streamlogger)
+
 
 A Writable Stream object that uploads to s3 objects, periodically rotating to a
 new object name.
