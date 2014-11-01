@@ -54,9 +54,9 @@ logger.info('Hello Winston!');
 ```
 
 ### Add hostname information for tails3
-tails3 will expects messages to be logged as json (the default for the file
-transport), with hostname and (for critical errors), stack
-properties to each log object, in addition to the standard timestamp, level and message
+tails3 expects messages to be logged as json (the default for the file
+transport), with hostname and (for critical errors), stack properties to each
+log object, in addition to the standard timestamp, level and message
 properties. You can provide these using the third "metadata" option to
 winston's log method:
 
