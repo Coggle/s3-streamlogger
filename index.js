@@ -119,7 +119,7 @@ S3StreamLogger.prototype._write = function(chunk, encoding, cb){
     // Call the callback immediately, as we may not actually write for some
     // time. If there is an upload error, we trigger our 'error' event.
     if(cb && typeof cb === 'function')
-        process.nextTick(cb);
+        setImmediate(cb);
 };
 
 module.exports = {
