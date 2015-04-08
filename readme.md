@@ -107,6 +107,10 @@ seconds.
 Files will be uploaded if the un-uploaded data exceeds `buffer_size` bytes.
 Defaults to 10 KB.
 
+#### server_side_encryption
+The server side encryption `AES256` algorithm used when storing objects in S3.
+Defaults to false.
+
 
 ### License
 [ISC](http://opensource.org/licenses/ISC): equivalent to 2-clause BSD.
