@@ -17,7 +17,7 @@ npm install --save s3-streamlogger
 ```js
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
-var s3stream = new S3SteamLogger({
+var s3stream = new S3StreamLogger({
                bucket: "mys3bucket",
         access_key_id: "...",
     secret_access_key: "..."
@@ -36,7 +36,7 @@ npm install --save s3-streamlogger
 var winston        = require('winston');
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
-var s3_stream = new S3SteamLogger({
+var s3_stream = new S3StreamLogger({
              bucket: "mys3bucket",
       access_key_id: "...",
   secret_access_key: "..."
