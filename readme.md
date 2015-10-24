@@ -70,6 +70,15 @@ details. You should take care **not** to log these errors back to the same
 stream (as that is likely to cause infinite recursion). Instead log them to the
 console, to a file, or to SNS using [winston-sns](https://github.com/jesseditson/winston-sns).
 
+Note that these errors will result in uncaught exceptions unless you have an
+`error` event handler registered, for example:
+
+```js
+s3_stream.on('error', function(err){
+    // there was an error!
+    some_other_logging_transport.log('error', 'logging transport error', err)
+});
+```
 
 ### Options
 
