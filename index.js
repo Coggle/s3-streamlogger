@@ -45,14 +45,19 @@ util.inherits(S3StreamLogger, stream.Writable);
 
 // write anything outstanding to the current file, and start a new one
 S3StreamLogger.prototype.flushFile = function(){
-    this._upload();
-    this._newFile();
+    this._upload(true);
 };
 
 
 // Private API
 
-S3StreamLogger.prototype._upload = function(){
+S3StreamLogger.prototype._upload = function(forceNewFile) {
+    if (this.timeout) {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+    }
+    this.last_write   = new Date();
+
     var buffer = Buffer.concat(this.buffers);
     var param  = {
         Bucket: this.bucket,
@@ -64,27 +69,29 @@ S3StreamLogger.prototype._upload = function(){
         param.ServerSideEncryption = SERVER_SIDE_ENCRYPTION;
     }
 
+    this.unwritten = 0;
+
+    var elapsed = (new Date()).getTime() - this.file_started.getTime();
+    if( forceNewFile || 
+        elapsed > this.rotate_every || 
+        buffer.length > this.max_file_size){
+
+        this._newFile();
+    }
+
+    // do everything else before calling putObject to avoid the 
+    // possibility that this._write is called again, losing data.
     this.s3.putObject(param, function(err){
         if(err){
             this.emit('error', err);
         }
     }.bind(this));
-
-    this.unwritten = 0;
-    if(this.timeout)
-        clearTimeout(this.timeout);
-
-    if((new Date()).getTime() - this.file_started.getTime() > this.rotate_every ||
-       buffer.length > this.max_file_size){
-        this._newFile();
-    }
 };
 
 // _newFile should ONLY be called when there is no un-uploaded data (i.e.
-// immediately after _upload), otherwise data will be lost
+// from _upload or initialization), otherwise data will be lost.
 S3StreamLogger.prototype._newFile = function(){
     this.buffers      = [];
-    this.unwritten    = 0;
     this.file_started = new Date();
     this.last_write   = this.file_started;
     // create a date object with the UTC version of the date to use with
@@ -121,7 +128,6 @@ S3StreamLogger.prototype._write = function(chunk, encoding, cb){
     }else{
         this.timeout = setTimeout(function(){
             this._upload();
-            this.timeout = null;
         }.bind(this), this.upload_every);
     }
 
