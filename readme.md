@@ -95,7 +95,7 @@ AWS secret key for the `access_key_id` specified.
 Can also be provided as the environment variable `AWS_SECRET_KEY_ID`.
 
 #### name_format
-Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M-unknown-unknown.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
+Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M-%S-%L-unknown-unknown.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
 
 If you use a format of the form `%Y-%m-%d-%H-%M-<stage>-<hostname>.log`, then
 you can use [tails3](http://github.com/coggle/tails3) to tail the log files
