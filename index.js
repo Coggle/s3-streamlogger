@@ -22,7 +22,7 @@ function S3StreamLogger(options){
     this.bucket                 = options.bucket || process.env.BUCKET_NAME;
     this.name_format            = options.name_format   || '%Y-%m-%d-%H-%M-unknown-unknown.log';
     this.rotate_every           = options.rotate_every  || 60*60*1000; // default to 60 minutes
-    this.max_file_size          = options.max_file_size || 200000      // or 200k, whichever is sooner
+    this.max_file_size          = options.max_file_size || 200000;     // or 200k, whichever is sooner
     this.upload_every           = options.upload_every  || 20*1000;    // default to 20 seconds
     this.buffer_size            = options.buffer_size   || 10000;      // or every 10k, which ever is sooner
     this.server_side_encryption = options.server_side_encryption || false;
@@ -38,7 +38,6 @@ function S3StreamLogger(options){
     this.last_write   = null;
     this.buffers      = [];
     this.unwritten    = 0;
-    this.file_size    = 0;
 
     this._newFile();
 }
@@ -48,7 +47,7 @@ util.inherits(S3StreamLogger, stream.Writable);
 S3StreamLogger.prototype.flushFile = function(){
     this._upload();
     this._newFile();
-}
+};
 
 
 // Private API
@@ -79,7 +78,7 @@ S3StreamLogger.prototype._upload = function(){
        buffer.length > this.max_file_size){
         this._newFile();
     }
-}
+};
 
 // _newFile should ONLY be called when there is no un-uploaded data (i.e.
 // immediately after _upload), otherwise data will be lost
@@ -90,7 +89,7 @@ S3StreamLogger.prototype._newFile = function(){
     this.last_write   = this.file_started;
     // create a date object with the UTC version of the date to use with
     // strftime, so that the commonly use formatters return the UTC values.
-    // This breaks timezone-converting specifers (as they will convert against
+    // This breaks timezone-converting specifiers (as they will convert against
     // the wrong timezone).
     var date_as_utc = new Date(
         this.file_started.getUTCFullYear(),
@@ -101,7 +100,7 @@ S3StreamLogger.prototype._newFile = function(){
         this.file_started.getUTCSeconds()
     );
     this.object_name  = strftime(this.name_format, date_as_utc);
-}
+};
 
 S3StreamLogger.prototype._write = function(chunk, encoding, cb){
     if(typeof chunk === 'string')
