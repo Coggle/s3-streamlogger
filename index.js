@@ -52,11 +52,11 @@ S3StreamLogger.prototype.flushFile = function(){
 // Private API
 
 S3StreamLogger.prototype._upload = function(forceNewFile) {
-    if (this.timeout) {
+    if(this.timeout){
         clearTimeout(this.timeout);
         this.timeout = null;
     }
-    this.last_write   = new Date();
+    this.last_write = new Date();
 
     var buffer = Buffer.concat(this.buffers);
     var param  = {
@@ -119,8 +119,10 @@ S3StreamLogger.prototype._write = function(chunk, encoding, cb){
         this.unwritten += chunk.length;
     }
 
-    if(this.timeout)
+    if(this.timeout){
         clearTimeout(this.timeout);
+        this.timeout = null;
+    }
 
     if((new Date()).getTime() - this.last_write.getTime() > this.upload_every ||
        this.unwritten > this.buffer_size){
