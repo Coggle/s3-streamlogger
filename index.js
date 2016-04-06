@@ -14,10 +14,6 @@ function S3StreamLogger(options){
 
     if(!(options.bucket || process.env.BUCKET_NAME))
         throw new Error("options.bucket or BUCKET_NAME environment variable is required");
-    if(!(options.access_key_id || process.env.AWS_SECRET_KEY_ID))
-        throw new Error("options.access_key_id or AWS_SECRET_KEY_ID environment variable is required");
-    if(!(options.secret_access_key || process.env.AWS_SECRET_ACCESS_KEY))
-        throw new Error("options.secret_access_key or AWS_SECRET_ACCESS_KEY environment variable is required");
 
     this.bucket                 = options.bucket || process.env.BUCKET_NAME;
     this.name_format            = options.name_format   || '%Y-%m-%d-%H-%M-%S-%L-unknown-unknown.log';
