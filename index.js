@@ -23,11 +23,22 @@ function S3StreamLogger(options){
     this.buffer_size            = options.buffer_size   || 10000;      // or every 10k, which ever is sooner
     this.server_side_encryption = options.server_side_encryption || false;
 
-    this.s3           = new aws.S3({
-        secretAccessKey: options.secret_access_key,
-            accessKeyId: options.access_key_id,
-             sslEnabled:true
-    });
+    // Backwards compatible API changes
+
+    options.config = options.config || {};
+    if(options.access_key_id) {
+      console.log('s3-streamlogger WARN: access_key_id is deprecated. Use config.accessKeyId instead.');
+      options.config.accessKeyId = options.access_key_id;
+    }
+    if(options.secret_access_key) {
+      console.log('s3-streamlogger WARN: secret_access_key is deprecated. Use config.secretAccessKey instead.');
+      options.config.secretAccessKey = options.secret_access_key;
+    }
+    if(options.config.sslEnabled === undefined) {
+      options.config.sslEnabled = true;
+    }
+
+    this.s3           = new aws.S3(options.config);
     this.timeout      = null;
     this.object_name  = null;
     this.file_started = null;
