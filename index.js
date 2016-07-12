@@ -27,11 +27,9 @@ function S3StreamLogger(options){
 
     options.config = options.config || {};
     if(options.access_key_id) {
-      console.log('s3-streamlogger WARN: access_key_id is deprecated. Use config.accessKeyId instead.');
       options.config.accessKeyId = options.access_key_id;
     }
     if(options.secret_access_key) {
-      console.log('s3-streamlogger WARN: secret_access_key is deprecated. Use config.secretAccessKey instead.');
       options.config.secretAccessKey = options.secret_access_key;
     }
     if(options.config.sslEnabled === undefined) {

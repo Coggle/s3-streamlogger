@@ -18,11 +18,9 @@ npm install --save s3-streamlogger
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
 var s3stream = new S3StreamLogger({
-             bucket: "mys3bucket",
-             config: {
-                          accessKeyId: "...",
-                      secretAccessKey: "..."
-             }
+               bucket: "mys3bucket",
+        access_key_id: "...",
+    secret_access_key: "..."
 });
 
 s3stream.write("hello S3");
@@ -40,10 +38,8 @@ var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
 var s3_stream = new S3StreamLogger({
              bucket: "mys3bucket",
-             config: {
-                          accessKeyId: "...",
-                      secretAccessKey: "..."
-             }
+      access_key_id: "...",
+  secret_access_key: "..."
 });
 
 var logger = new (winston.Logger)({
@@ -90,9 +86,23 @@ s3_stream.on('error', function(err){
 Name of the S3 bucket to upload data to. Must exist.
 Can also be provided as the environment variable `BUCKET_NAME`.
 
+#### access_key_id
+AWS access key ID, must have putObject permission on the specified bucket.  Can
+also be provided as the environment variable `AWS_SECRET_ACCESS_KEY`, or as any
+of the other [authentication
+methods](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html)
+supported by the AWS SDK.
+
+#### secret_access_key
+AWS secret key for the `access_key_id` specified.  Can also be provided as the
+environment variable `AWS_SECRET_KEY_ID`, or as any of the other
+[authentication
+methods](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html)
+supported by the AWS SDK.
+
 #### config
 
-Configuration object for the AWS SDK. The full list of options is available on the [AWS SDK Configuration Object page](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
+Configuration object for the AWS SDK. The full list of options is available on the [AWS SDK Configuration Object page](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html). This is an alternative to using access_key_id and secret_access_key and is overwritten by them if both are used.
 
 #### name_format
 Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M-%S-%L-unknown-unknown.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
