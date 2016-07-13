@@ -100,6 +100,10 @@ environment variable `AWS_SECRET_KEY_ID`, or as any of the other
 methods](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html)
 supported by the AWS SDK.
 
+#### config
+
+Configuration object for the AWS SDK. The full list of options is available on the [AWS SDK Configuration Object page](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html). This is an alternative to using access_key_id and secret_access_key and is overwritten by them if both are used.
+
 #### name_format
 Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M-%S-%L-unknown-unknown.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
 
