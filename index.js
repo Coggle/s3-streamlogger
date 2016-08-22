@@ -16,6 +16,7 @@ function S3StreamLogger(options){
         throw new Error("options.bucket or BUCKET_NAME environment variable is required");
 
     this.bucket                 = options.bucket || process.env.BUCKET_NAME;
+    this.folder                 = options.folder || '';
     this.name_format            = options.name_format   || '%Y-%m-%d-%H-%M-%S-%L-unknown-unknown.log';
     this.rotate_every           = options.rotate_every  || 60*60*1000; // default to 60 minutes
     this.max_file_size          = options.max_file_size || 200000;     // or 200k, whichever is sooner
@@ -112,7 +113,7 @@ S3StreamLogger.prototype._newFile = function(){
         this.file_started.getUTCSeconds(),
         this.file_started.getUTCMilliseconds()
     );
-    this.object_name  = strftime(this.name_format, date_as_utc);
+    this.object_name  =  (this.folder === '' ? '' : this.folder + '/') + strftime(this.name_format, date_as_utc);
 };
 
 S3StreamLogger.prototype._write = function(chunk, encoding, cb){

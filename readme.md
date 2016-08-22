@@ -18,9 +18,9 @@ npm install --save s3-streamlogger
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
 var s3stream = new S3StreamLogger({
-               bucket: "mys3bucket",
-        access_key_id: "...",
-    secret_access_key: "..."
+             bucket: "mys3bucket",
+      access_key_id: "...",
+  secret_access_key: "..."
 });
 
 s3stream.write("hello S3");
@@ -51,6 +51,20 @@ var logger = new (winston.Logger)({
 });
 
 logger.info('Hello Winston!');
+```
+
+### Define subfolder
+```js
+var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+
+var s3stream = new S3StreamLogger({
+             bucket: "mys3bucket",
+             folder: "my/nested/subfolder",
+      access_key_id: "...",
+  secret_access_key: "..."
+});
+
+s3stream.write("hello S3");
 ```
 
 ### Add hostname information for tails3
@@ -85,6 +99,10 @@ s3_stream.on('error', function(err){
 #### bucket *(required)*
 Name of the S3 bucket to upload data to. Must exist.
 Can also be provided as the environment variable `BUCKET_NAME`.
+
+#### folder
+An optional folder to stream log files to. Takes a path string,
+eg: "my/subfolder" or "nested".
 
 #### access_key_id
 AWS access key ID, must have putObject permission on the specified bucket.  Can
