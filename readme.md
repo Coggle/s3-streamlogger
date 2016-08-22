@@ -18,22 +18,8 @@ npm install --save s3-streamlogger
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
 var s3stream = new S3StreamLogger({
-  bucket: "mys3bucket",
-  access_key_id: "...",
-  secret_access_key: "..."
-});
-
-s3stream.write("hello S3");
-```
-
-### Define subfolder
-```js
-var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
-
-var s3stream = new S3StreamLogger({
-  bucket: "mys3bucket",
-  folder: "my/nested/subfolder"
-  access_key_id: "...",
+             bucket: "mys3bucket",
+      access_key_id: "...",
   secret_access_key: "..."
 });
 
@@ -51,8 +37,8 @@ var winston        = require('winston');
 var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
 
 var s3_stream = new S3StreamLogger({
-  bucket: "mys3bucket",
-  access_key_id: "...",
+             bucket: "mys3bucket",
+      access_key_id: "...",
   secret_access_key: "..."
 });
 
@@ -65,6 +51,20 @@ var logger = new (winston.Logger)({
 });
 
 logger.info('Hello Winston!');
+```
+
+### Define subfolder
+```js
+var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+
+var s3stream = new S3StreamLogger({
+             bucket: "mys3bucket",
+             folder: "my/nested/subfolder",
+      access_key_id: "...",
+  secret_access_key: "..."
+});
+
+s3stream.write("hello S3");
 ```
 
 ### Add hostname information for tails3
