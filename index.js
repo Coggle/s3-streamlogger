@@ -2,6 +2,8 @@ var stream   = require('stream');
 var util     = require('util');
 var strftime = require('strftime');
 var aws      = require('aws-sdk');
+var branch   = require('git-branch');
+var os       = require('os');
 
 // Constants
 
@@ -15,9 +17,14 @@ function S3StreamLogger(options){
     if(!(options.bucket || process.env.BUCKET_NAME))
         throw new Error("options.bucket or BUCKET_NAME environment variable is required");
 
+    // Get branch and host name for default file name
+    var _current_branch = branch.sync();
+    var _hostname = os.hostname();
+    var _file_name = `%Y-%m-%d-%H-%M-%S-%L-${_current_branch ? _current_branch : 'unknown'}-${_hostname}.log`;
+
     this.bucket                 = options.bucket || process.env.BUCKET_NAME;
     this.folder                 = options.folder || '';
-    this.name_format            = options.name_format   || '%Y-%m-%d-%H-%M-%S-%L-unknown-unknown.log';
+    this.name_format            = options.name_format   || _file_name;
     this.rotate_every           = options.rotate_every  || 60*60*1000; // default to 60 minutes
     this.max_file_size          = options.max_file_size || 200000;     // or 200k, whichever is sooner
     this.upload_every           = options.upload_every  || 20*1000;    // default to 20 seconds
@@ -54,7 +61,6 @@ S3StreamLogger.prototype.flushFile = function(){
     this._upload(true);
 };
 
-
 // Private API
 
 S3StreamLogger.prototype._upload = function(forceNewFile) {
@@ -78,14 +84,14 @@ S3StreamLogger.prototype._upload = function(forceNewFile) {
     this.unwritten = 0;
 
     var elapsed = (new Date()).getTime() - this.file_started.getTime();
-    if( forceNewFile || 
-        elapsed > this.rotate_every || 
+    if( forceNewFile ||
+        elapsed > this.rotate_every ||
         buffer.length > this.max_file_size){
 
         this._newFile();
     }
 
-    // do everything else before calling putObject to avoid the 
+    // do everything else before calling putObject to avoid the
     // possibility that this._write is called again, losing data.
     this.s3.putObject(param, function(err){
         if(err){
