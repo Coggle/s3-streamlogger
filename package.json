@@ -22,7 +22,8 @@
   },
   "homepage": "https://github.com/coggle/s3-streamlogger",
   "dependencies": {
-    "strftime": "~0.8.2",
-    "aws-sdk": "^2.1.16"
+    "aws-sdk": "^2.1.16",
+    "git-branch": "~0.3.0",
+    "strftime": "~0.8.2"
   }
 }
