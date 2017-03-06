@@ -17,14 +17,9 @@ function S3StreamLogger(options){
     if(!(options.bucket || process.env.BUCKET_NAME))
         throw new Error("options.bucket or BUCKET_NAME environment variable is required");
 
-    // Get branch and host name for default file name
-    var _current_branch = branch.sync();
-    var _hostname = os.hostname();
-    var _file_name = `%Y-%m-%d-%H-%M-%S-%L-${_current_branch ? _current_branch : 'unknown'}-${_hostname}.log`;
-
     this.bucket                 = options.bucket || process.env.BUCKET_NAME;
     this.folder                 = options.folder || '';
-    this.name_format            = options.name_format   || _file_name;
+    this.name_format            = options.name_format;
     this.rotate_every           = options.rotate_every  || 60*60*1000; // default to 60 minutes
     this.max_file_size          = options.max_file_size || 200000;     // or 200k, whichever is sooner
     this.upload_every           = options.upload_every  || 20*1000;    // default to 20 seconds
@@ -42,6 +37,16 @@ function S3StreamLogger(options){
     }
     if(options.config.sslEnabled === undefined) {
       options.config.sslEnabled = true;
+    }
+    if(!options.name_format) {
+        // Get branch and host name for default file name
+        var _current_branch;
+        try {
+            _current_branch = branch.sync();
+        } catch (e) {
+            _current_branch = 'unknown'
+        }
+        this.name_format = `%Y-%m-%d-%H-%M-%S-%L-${_current_branch}-${os.hostname()}.log`;
     }
 
     this.s3           = new aws.S3(options.config);
