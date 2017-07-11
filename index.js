@@ -25,6 +25,7 @@ function S3StreamLogger(options){
     this.upload_every           = options.upload_every  || 20*1000;    // default to 20 seconds
     this.buffer_size            = options.buffer_size   || 10000;      // or every 10k, which ever is sooner
     this.server_side_encryption = options.server_side_encryption || false;
+    this.acl                    = options.acl || false;
 
     // Backwards compatible API changes
 
@@ -84,6 +85,10 @@ S3StreamLogger.prototype._upload = function(forceNewFile) {
 
     if (this.server_side_encryption) {
         param.ServerSideEncryption = SERVER_SIDE_ENCRYPTION;
+    }
+
+    if (this.acl) {
+        param.ACL = this.acl;
     }
 
     this.unwritten = 0;
