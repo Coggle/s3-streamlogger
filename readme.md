@@ -148,6 +148,10 @@ Defaults to 10 KB.
 The server side encryption `AES256` algorithm used when storing objects in S3.
 Defaults to false.
 
+#### acl
+The canned ACL (access control list) to apply to uploaded objects.
+Defaults to no ACL.
+
 
 ### License
 [ISC](http://opensource.org/licenses/ISC): equivalent to 2-clause BSD.
