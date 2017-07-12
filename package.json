@@ -25,5 +25,9 @@
     "aws-sdk": "^2.1.16",
     "git-branch": "~0.3.0",
     "strftime": "~0.8.2"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0"
   }
 }
