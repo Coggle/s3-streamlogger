@@ -1,6 +1,6 @@
 {
   "name": "s3-streamlogger",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Stream for logging to s3 with rotated object names. Usable as a wiston-file stream. ",
   "main": "index.js",
   "scripts": {
