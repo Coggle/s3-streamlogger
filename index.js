@@ -4,6 +4,9 @@ var strftime = require('strftime');
 var aws      = require('aws-sdk');
 var branch   = require('git-branch');
 var os       = require('os');
+var zlib     = require('zlib');
+var Promise  = require('bluebird');
+var gzip  = Promise.promisify(zlib.gzip);
 
 // Constants
 
@@ -26,6 +29,7 @@ function S3StreamLogger(options){
     this.buffer_size            = options.buffer_size   || 10000;      // or every 10k, which ever is sooner
     this.server_side_encryption = options.server_side_encryption || false;
     this.acl                    = options.acl || false;
+    this.compress               = options.compress || false;
 
     // Backwards compatible API changes
 
@@ -76,38 +80,52 @@ S3StreamLogger.prototype._upload = function(forceNewFile) {
     }
     this.last_write = new Date();
 
+    var self = this;
+    this.getBuffer().bind(this)
+        .then(buffer => {
+
+            var param  = {
+                Bucket: this.bucket,
+                Key: this.object_name,
+                Body: buffer
+            };
+
+            if (this.server_side_encryption) {
+                param.ServerSideEncryption = SERVER_SIDE_ENCRYPTION;
+            }
+
+            if (this.acl) {
+                param.ACL = this.acl;
+            }
+
+            this.unwritten = 0;
+
+            var elapsed = (new Date()).getTime() - this.file_started.getTime();
+            if( forceNewFile ||
+                elapsed > this.rotate_every ||
+                buffer.length > this.max_file_size){
+
+                this._newFile();
+            }
+
+            // do everything else before calling putObject to avoid the
+            // possibility that this._write is called again, losing data.
+            this.s3.putObject(param, function(err){
+                if(err){
+                    this.emit('error', err);
+                }
+            }.bind(this));
+        });
+};
+
+S3StreamLogger.prototype.getBuffer = function() {
     var buffer = Buffer.concat(this.buffers);
-    var param  = {
-        Bucket: this.bucket,
-           Key: this.object_name,
-          Body: buffer
-    };
-
-    if (this.server_side_encryption) {
-        param.ServerSideEncryption = SERVER_SIDE_ENCRYPTION;
+    if(this.compress) {
+        return gzip(buffer);
     }
-
-    if (this.acl) {
-        param.ACL = this.acl;
-    }
-
-    this.unwritten = 0;
-
-    var elapsed = (new Date()).getTime() - this.file_started.getTime();
-    if( forceNewFile ||
-        elapsed > this.rotate_every ||
-        buffer.length > this.max_file_size){
-
-        this._newFile();
-    }
-
-    // do everything else before calling putObject to avoid the
-    // possibility that this._write is called again, losing data.
-    this.s3.putObject(param, function(err){
-        if(err){
-            this.emit('error', err);
-        }
-    }.bind(this));
+    return new Promise(function(resolve, reject) {
+        resolve(buffer);
+    });
 };
 
 // _newFile should ONLY be called when there is no un-uploaded data (i.e.
@@ -129,7 +147,7 @@ S3StreamLogger.prototype._newFile = function(){
         this.file_started.getUTCSeconds(),
         this.file_started.getUTCMilliseconds()
     );
-    this.object_name  =  (this.folder === '' ? '' : this.folder + '/') + strftime(this.name_format, date_as_utc);
+    this.object_name  =  (this.folder === '' ? '' : this.folder + '/') + strftime(this.name_format, date_as_utc) + (this.compress ? '.gz' : '');
 };
 
 S3StreamLogger.prototype._write = function(chunk, encoding, cb){
