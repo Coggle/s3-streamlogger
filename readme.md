@@ -155,7 +155,7 @@ Defaults to false.
 The canned ACL (access control list) to apply to uploaded objects.
 Defaults to no ACL.
 
-### compress
+#### compress
 If true, the files will be gzipped before uploading (may reduce s3 storage costs).
 Defaults to false.
 
