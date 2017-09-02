@@ -67,6 +67,21 @@ var s3stream = new S3StreamLogger({
 s3stream.write("hello S3");
 ```
 
+### Assign tags
+```js
+var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+
+var s3stream = new S3StreamLogger({
+             bucket: "mys3bucket",
+             folder: "my/nested/subfolder",
+               tags: {type: 'myType', project: 'myProject'},
+      access_key_id: "...",
+  secret_access_key: "..."
+});
+
+s3stream.write("hello S3");
+```
+
 ### Add hostname information for tails3
 tails3 expects messages to be logged as json (the default for the file
 transport), with hostname and (for critical errors), stack properties to each
@@ -103,6 +118,10 @@ Can also be provided as the environment variable `BUCKET_NAME`.
 #### folder
 An optional folder to stream log files to. Takes a path string,
 eg: "my/subfolder" or "nested".
+
+#### folder
+An optional set of tags to assign to the log files. Takes an object,
+eg: `{type: "myType"}` or `{type: "myType", project: "myProject"}`.
 
 #### access_key_id
 AWS access key ID, must have putObject permission on the specified bucket.  Can
