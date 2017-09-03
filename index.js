@@ -20,6 +20,7 @@ function S3StreamLogger(options){
 
     this.bucket                 = options.bucket || process.env.BUCKET_NAME;
     this.folder                 = options.folder || '';
+    this.tags                   = options.tags || {};                  // no tags are assigned by default
     this.name_format            = options.name_format;
     this.rotate_every           = options.rotate_every  || 60*60*1000; // default to 60 minutes
     this.max_file_size          = options.max_file_size || 200000;     // or 200k, whichever is sooner
@@ -107,10 +108,14 @@ S3StreamLogger.prototype._upload = function(forceNewFile) {
             return this.emit('error', err);
         }
 
+        // constructc the tagging string according to AWS SDK specifications
+        var tagging = Object.keys(this.tags).map(function(key) {return key + '=' + this.tags[key];}, this).join('&');
+
         var param  = {
             Bucket: this.bucket,
             Key: this.object_name,
-            Body: buffer
+            Body: buffer,
+            Tagging: tagging
         };
 
         if(this.server_side_encryption){
