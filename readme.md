@@ -119,7 +119,7 @@ Can also be provided as the environment variable `BUCKET_NAME`.
 An optional folder to stream log files to. Takes a path string,
 eg: "my/subfolder" or "nested".
 
-#### folder
+#### tags
 An optional set of tags to assign to the log files. Takes an object,
 eg: `{type: "myType"}` or `{type: "myType", project: "myProject"}`.
 
