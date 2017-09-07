@@ -22,6 +22,7 @@ function S3StreamLogger(options){
     this.folder                 = options.folder || '';
     this.tags                   = options.tags || {};                  // no tags are assigned by default
     this.name_format            = options.name_format;
+    this.object_name_creator    = options.object_name_creator;
     this.rotate_every           = options.rotate_every  || 60*60*1000; // default to 60 minutes
     this.max_file_size          = options.max_file_size || 200000;     // or 200k, whichever is sooner
     this.upload_every           = options.upload_every  || 20*1000;    // default to 20 seconds
@@ -170,7 +171,11 @@ S3StreamLogger.prototype._newFile = function(){
         this.file_started.getUTCSeconds(),
         this.file_started.getUTCMilliseconds()
     );
-    this.object_name  =  (this.folder === '' ? '' : this.folder + '/') + strftime(this.name_format, date_as_utc);
+    if (this.object_name_creator) {
+        this.object_name = this.object_name_creator();
+    } else {
+        this.object_name  =  (this.folder === '' ? '' : this.folder + '/') + strftime(this.name_format, date_as_utc);
+    }
 };
 
 // restore unwritten data in the event that a write failed.
