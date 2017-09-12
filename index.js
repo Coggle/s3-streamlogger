@@ -29,6 +29,7 @@ function S3StreamLogger(options){
     this.server_side_encryption = options.server_side_encryption || false;
     this.acl                    = options.acl || false;
     this.compress               = options.compress || false;
+    this.error_handler          = options.error_handler || null;
 
     // Backwards compatible API changes
 
@@ -128,12 +129,19 @@ S3StreamLogger.prototype._upload = function(forceNewFile) {
 
         // do everything else before calling putObject to avoid the
         // possibility that this._write is called again, losing data.
-        this.s3.putObject(param, function(err){
-            if(err){
-                this._restoreUnwritten(saved.unwritten, saved.object_name, saved.buffers);
+        var requestObject = this.s3.putObject(param);
+
+        // setup an error handler to restore unwritten data and optionally prevent uncaught exceptions.
+        requestObject.on('error', function(err) {
+            this._restoreUnwritten(saved.unwritten, saved.object_name, saved.buffers);
+            if(this.error_handler) {
+                this.error_handler(err);
+            }else{
                 this.emit('error', err);
             }
         }.bind(this));
+
+        requestObject.send();
     }.bind(this));
 };
 
