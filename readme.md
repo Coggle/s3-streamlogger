@@ -113,10 +113,10 @@ s3_stream.on('error', function(err){
 ```
 
 When using s3-streamlogger with the Winston File transport, the File transport
-attaches its own error handler to the stream, so you do not need your own one,
+attaches its own error handler to the stream, so you do not need your own,
 however it will re-emit the errors on itself which must be handled instead:
 
-```
+```js
 var transport = new (winston.transports.File)({
   stream: s3_stream
 });
