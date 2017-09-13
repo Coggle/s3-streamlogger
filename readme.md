@@ -103,12 +103,24 @@ stream (as that is likely to cause infinite recursion). Instead log them to the
 console, to a file, or to SNS using [winston-sns](https://github.com/jesseditson/winston-sns).
 
 Note that these errors will result in uncaught exceptions unless you have an
-`error` event handler registered, for example:
+`error` event handler registered. Unfortunately, registering an error handler with
+`stream.on('error', handler)` won't prevent uncaught exceptions because the errors
+happen in the AWS SDK and not S3StreamLogger itself.
+
+To work around this you can pass an error handling function to S3StreamLogger:
 
 ```js
-s3_stream.on('error', function(err){
+function errorHandler(err) {
     // there was an error!
     some_other_logging_transport.log('error', 'logging transport error', err)
+}
+var s3stream = new S3StreamLogger({
+             bucket: "mys3bucket",
+             folder: "my/nested/subfolder",
+               tags: {type: 'myType', project: 'myProject'},
+      access_key_id: "...",
+  secret_access_key: "...",
+      error_handler: errorHandler
 });
 ```
 
@@ -197,6 +209,11 @@ Defaults to no ACL.
 #### compress
 If true, the files will be gzipped before uploading (may reduce s3 storage costs).
 Defaults to false.
+
+#### error_handler
+A function that will be used as an `error` event handler when writing to S3.
+Setting an error handler prevents uncaught exceptions from killing your process.
+Defaults to no error handler.
 
 ### License
 [ISC](http://opensource.org/licenses/ISC): equivalent to 2-clause BSD.
