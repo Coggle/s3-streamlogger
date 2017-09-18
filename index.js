@@ -170,7 +170,10 @@ S3StreamLogger.prototype._newFile = function(){
         this.file_started.getUTCSeconds(),
         this.file_started.getUTCMilliseconds()
     );
-    this.object_name  =  (this.folder === '' ? '' : this.folder + '/') + strftime(this.name_format, date_as_utc);
+    // make sure there aren't multiple trailing slashes on the folder name.
+    var folder = (this.folder ? this.folder + '/' : '').replace(/\/+$/, '/');
+    this.object_name = folder + strftime(this.name_format, date_as_utc);
+
 };
 
 // restore unwritten data in the event that a write failed.
