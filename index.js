@@ -70,8 +70,8 @@ function S3StreamLogger(options){
 util.inherits(S3StreamLogger, stream.Writable);
 
 // write anything outstanding to the current file, and start a new one
-S3StreamLogger.prototype.flushFile = function(){
-    this._upload(true);
+S3StreamLogger.prototype.flushFile = function(cb){
+    this._upload(true, cb);
 };
 
 // Private API
