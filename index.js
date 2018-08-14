@@ -70,13 +70,13 @@ function S3StreamLogger(options){
 util.inherits(S3StreamLogger, stream.Writable);
 
 // write anything outstanding to the current file, and start a new one
-S3StreamLogger.prototype.flushFile = function(){
-    this._upload(true);
+S3StreamLogger.prototype.flushFile = function(cb){
+    this._upload(true, cb);
 };
 
 // Private API
 
-S3StreamLogger.prototype._upload = function(forceNewFile) {
+S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
     if(this.timeout){
         clearTimeout(this.timeout);
         this.timeout = null;
@@ -105,6 +105,9 @@ S3StreamLogger.prototype._upload = function(forceNewFile) {
     this._prepareBuffer(function(err, buffer){
         if(err){
             this._restoreUnwritten(saved.unwritten, saved.object_name, saved.buffers);
+            if(cb) {
+                cb(err);
+            }
             return this.emit('error', err);
         }
 
@@ -128,10 +131,16 @@ S3StreamLogger.prototype._upload = function(forceNewFile) {
 
         // do everything else before calling putObject to avoid the
         // possibility that this._write is called again, losing data.
-        this.s3.putObject(param, function(err){
+        this.s3.putObject(param, function(err, data){
             if(err){
                 this._restoreUnwritten(saved.unwritten, saved.object_name, saved.buffers);
-                this.emit('error', err);
+                if(cb) {
+                    cb(err);
+                }
+                return this.emit('error', err);
+            }
+            if(cb) {
+                cb(null, data);
             }
         }.bind(this));
     }.bind(this));
