@@ -42,6 +42,9 @@ function S3StreamLogger(options){
     if(options.config.sslEnabled === undefined) {
       options.config.sslEnabled = true;
     }
+    if(options.region) {
+      options.config.region = options.region;
+    }
     if(!options.name_format) {
         // Get branch and host name for default file name
         var _current_branch;
