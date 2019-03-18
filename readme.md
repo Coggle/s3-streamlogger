@@ -42,16 +42,15 @@ var s3_stream = new S3StreamLogger({
   secret_access_key: "..."
 });
 
-var transport = new (winston.transports.File)({
+var transport = new (winston.transports.Stream)({
   stream: s3_stream
 });
 // see error handling section below
 transport.on('error', function(err){/* ... */});
 
-var logger = new (winston.Logger)({
-  transports: [file_transport]
+var logger = winston.createLogger({
+  transports: [transport]
 });
-
 
 logger.info('Hello Winston!');
 ```
@@ -112,20 +111,20 @@ s3_stream.on('error', function(err){
 });
 ```
 
-When using s3-streamlogger with the Winston File transport, the File transport
+When using s3-streamlogger with the Winston Stream transport, the Stream transport
 attaches its own error handler to the stream, so you do not need your own,
 however it will re-emit the errors on itself which must be handled instead:
 
 ```js
-var transport = new (winston.transports.File)({
+var transport = new (winston.transports.Stream)({
   stream: s3_stream
 });
 transport.on('error', function(err){
   /* handle s3 stream errors (e.g. invalid credentials, EHOSTDOWN) here */
 });
 
-var logger = new (winston.Logger)({
-  transports: [file_transport]
+var logger = winston.createLogger({
+  transports: [transport]
 });
 ```
 
