@@ -9,6 +9,7 @@ var zlib     = require('zlib');
 // Constants
 
 var SERVER_SIDE_ENCRYPTION = "AES256";
+var CONTENT_TYPE_PLAIN_TEXT = "text/plain";
 
 // Public API
 
@@ -130,6 +131,12 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
 
         if(this.acl){
             param.ACL = this.acl;
+        }
+		
+		// Setting content type to text/plain allows log files to be 
+        // previewed natively within browsers without downloading.
+        if (!this.compress) {
+            param.ContentType = CONTENT_TYPE_PLAIN_TEXT;
         }
 
         // do everything else before calling putObject to avoid the
