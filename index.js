@@ -97,13 +97,13 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
     // upload failure) we will re-instate it:
 
     this.unwritten = 0;
-
     var elapsed = (new Date()).getTime() - this.file_started.getTime();
+    var reset_buffers = false;
     if(forceNewFile ||
        elapsed > this.rotate_every ||
        this._fileSize() > this.max_file_size){
         saved.buffers = this.buffers;
-        this._newFile();
+        reset_buffers = true;
     }
 
     this._prepareBuffer(function(err, buffer){
@@ -154,6 +154,10 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
             }
         }.bind(this));
     }.bind(this));
+    
+    if(reset_buffers){
+        this._newFile();
+    }
 };
 
 S3StreamLogger.prototype._prepareBuffer = function(cb) {
