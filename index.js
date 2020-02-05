@@ -78,6 +78,11 @@ S3StreamLogger.prototype.flushFile = function(cb){
     this._upload(true, cb);
 };
 
+// Override this function to modify the parameters used when uploading to S3
+S3StreamLogger.prototype.putObject = function(param, callback) {
+    this.s3.putObject(param, callback);
+}
+
 // Private API
 
 S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
@@ -141,7 +146,7 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
 
         // do everything else before calling putObject to avoid the
         // possibility that this._write is called again, losing data.
-        this.s3.putObject(param, function(err, data){
+        this.putObject(param, function(err, data){
             if(err){
                 this._restoreUnwritten(saved.unwritten, saved.object_name, saved.buffers);
                 if(cb) {
