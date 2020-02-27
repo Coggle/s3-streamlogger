@@ -246,6 +246,10 @@ S3StreamLogger.prototype._write = function(chunk, encoding, cb){
         setImmediate(cb);
 };
 
+S3StreamLogger.prototype._final = function(cb) {
+    this._upload(false, cb);
+}
+
 module.exports = {
     S3StreamLogger: S3StreamLogger
 };
