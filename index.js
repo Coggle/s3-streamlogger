@@ -136,7 +136,7 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
             Key: this.object_name,
             Body: buffer,
             Tagging: tagging,
-            StorageClass: this.storage_class,
+            StorageClass: this.storage_class
         };
 
         if(this.server_side_encryption){
