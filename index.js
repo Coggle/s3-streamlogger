@@ -31,6 +31,14 @@ function S3StreamLogger(options){
     this.acl                    = options.acl || false;
     this.compress               = options.compress || false;
 
+    // Validating input storage_class parameter & setting default storage_class - STANDARD
+    options.storage_class = options.storage_class || 'STANDARD';
+    if(['STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA', 'ONEZONE_IA','INTELLIGENT_TIERING', 'GLACIER', 'DEEP_ARCHIVE'].indexOf(options.storage_class) > -1){
+        this.storage_class = options.storage_class;
+    } else {
+        this.storage_class = 'STANDARD';
+    }
+
     // Backwards compatible API changes
 
     options.config = options.config || {};
@@ -127,7 +135,8 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
             Bucket: this.bucket,
             Key: this.object_name,
             Body: buffer,
-            Tagging: tagging
+            Tagging: tagging,
+            StorageClass: this.storage_class,
         };
 
         if(this.server_side_encryption){
@@ -137,8 +146,8 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
         if(this.acl){
             param.ACL = this.acl;
         }
-		
-		// Setting content type to text/plain allows log files to be 
+    
+    // Setting content type to text/plain allows log files to be 
         // previewed natively within browsers without downloading.
         if (!this.compress) {
             param.ContentType = CONTENT_TYPE_PLAIN_TEXT;
