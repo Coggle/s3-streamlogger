@@ -31,8 +31,10 @@ function S3StreamLogger(options){
     this.acl                    = options.acl || false;
     this.compress               = options.compress || false;
 
-    // setting S3 object storage class
-    this.storage_class = options.storage_class;
+    // basic validation, setting S3 object storage class
+    if(typeof options.storage_class === 'string') {
+      this.storage_class = options.storage_class;
+    }
 
     // Backwards compatible API changes
 
