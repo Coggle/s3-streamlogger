@@ -31,13 +31,8 @@ function S3StreamLogger(options){
     this.acl                    = options.acl || false;
     this.compress               = options.compress || false;
 
-    // Validating input storage_class parameter & setting default storage_class - STANDARD
-    options.storage_class = options.storage_class || 'STANDARD';
-    if(['STANDARD', 'REDUCED_REDUNDANCY', 'STANDARD_IA', 'ONEZONE_IA','INTELLIGENT_TIERING', 'GLACIER', 'DEEP_ARCHIVE'].indexOf(options.storage_class) > -1){
-        this.storage_class = options.storage_class;
-    } else {
-        this.storage_class = 'STANDARD';
-    }
+    // setting S3 object storage class
+    this.storage_class = options.storage_class;
 
     // Backwards compatible API changes
 
@@ -136,8 +131,11 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
             Key: this.object_name,
             Body: buffer,
             Tagging: tagging,
-            StorageClass: this.storage_class
         };
+
+        if(this.storage_class){
+            param.StorageClass = this.storage_class;
+        }
 
         if(this.server_side_encryption){
             param.ServerSideEncryption = SERVER_SIDE_ENCRYPTION;
