@@ -31,6 +31,11 @@ function S3StreamLogger(options){
     this.acl                    = options.acl || false;
     this.compress               = options.compress || false;
 
+    // basic validation, setting S3 object storage class
+    if(typeof options.storage_class === 'string') {
+      this.storage_class = options.storage_class;
+    }
+
     // Backwards compatible API changes
 
     options.config = options.config || {};
@@ -130,6 +135,10 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
             Tagging: tagging
         };
 
+        if(this.storage_class){
+            param.StorageClass = this.storage_class;
+        }
+
         if(this.server_side_encryption){
             param.ServerSideEncryption = SERVER_SIDE_ENCRYPTION;
         }
@@ -137,8 +146,8 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
         if(this.acl){
             param.ACL = this.acl;
         }
-		
-		// Setting content type to text/plain allows log files to be 
+    
+    // Setting content type to text/plain allows log files to be 
         // previewed natively within browsers without downloading.
         if (!this.compress) {
             param.ContentType = CONTENT_TYPE_PLAIN_TEXT;
