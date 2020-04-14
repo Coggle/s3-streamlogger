@@ -189,6 +189,10 @@ Defaults to 10 KB.
 The server side encryption `AES256` algorithm used when storing objects in S3.
 Defaults to false.
 
+#### storage_class
+The S3 StorageClass (STANDARD, REDUCED_REDUNDANCY, etc.). If omitted, no value
+is used and aws-sdk will fill in its default.
+
 #### acl
 The canned ACL (access control list) to apply to uploaded objects.
 Defaults to no ACL.
