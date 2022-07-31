@@ -9,7 +9,7 @@ var zlib     = require('zlib');
 // Constants
 
 var SERVER_SIDE_ENCRYPTION = "AES256";
-var CONTENT_TYPE_PLAIN_TEXT = "text/plain";
+var CONTENT_TYPE_PLAIN_TEXT = "text/plain;charset=utf-8";
 
 // Public API
 
