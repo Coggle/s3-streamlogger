@@ -15,12 +15,10 @@ npm install --save s3-streamlogger
 
 ### Basic Usage
 ```js
-var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+const { S3StreamLogger } = require('s3-streamlogger');
 
-var s3stream = new S3StreamLogger({
-             bucket: "mys3bucket",
-      access_key_id: "...",
-  secret_access_key: "..."
+const s3stream = new S3StreamLogger({
+     bucket: "mys3bucket",
 });
 
 s3stream.write("hello S3");
@@ -33,22 +31,20 @@ npm install --save s3-streamlogger
 ```
 
 ```js
-var winston        = require('winston');
-var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+const winston            = require('winston');
+const { S3StreamLogger } = require('s3-streamlogger');
 
-var s3_stream = new S3StreamLogger({
-             bucket: "mys3bucket",
-      access_key_id: "...",
-  secret_access_key: "..."
+const s3_stream = new S3StreamLogger({
+     bucket: "mys3bucket",
 });
 
-var transport = new (winston.transports.Stream)({
+const transport = new (winston.transports.Stream)({
   stream: s3_stream
 });
 // see error handling section below
 transport.on('error', function(err){/* ... */});
 
-var logger = winston.createLogger({
+const logger = winston.createLogger({
   transports: [transport]
 });
 
@@ -57,13 +53,11 @@ logger.info('Hello Winston!');
 
 ### Define subfolder
 ```js
-var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+const { S3StreamLogger } = require('s3-streamlogger');
 
-var s3stream = new S3StreamLogger({
-             bucket: "mys3bucket",
-             folder: "my/nested/subfolder",
-      access_key_id: "...",
-  secret_access_key: "..."
+const s3stream = new S3StreamLogger({
+     bucket: "mys3bucket",
+     folder: "my/nested/subfolder"
 });
 
 s3stream.write("hello S3");
@@ -71,14 +65,12 @@ s3stream.write("hello S3");
 
 ### Assign tags
 ```js
-var S3StreamLogger = require('s3-streamlogger').S3StreamLogger;
+const { S3StreamLogger } = require('s3-streamlogger');
 
-var s3stream = new S3StreamLogger({
-             bucket: "mys3bucket",
-             folder: "my/nested/subfolder",
-               tags: {type: 'myType', project: 'myProject'},
-      access_key_id: "...",
-  secret_access_key: "..."
+const s3stream = new S3StreamLogger({
+     bucket: "mys3bucket",
+     folder: "my/nested/subfolder",
+       tags: {type: 'myType', project: 'myProject'}
 });
 
 s3stream.write("hello S3");
@@ -116,14 +108,14 @@ attaches its own error handler to the stream, so you do not need your own,
 however it will re-emit the errors on itself which must be handled instead:
 
 ```js
-var transport = new (winston.transports.Stream)({
+const transport = new (winston.transports.Stream)({
   stream: s3_stream
 });
 transport.on('error', function(err){
   /* handle s3 stream errors (e.g. invalid credentials, EHOSTDOWN) here */
 });
 
-var logger = winston.createLogger({
+const logger = winston.createLogger({
   transports: [transport]
 });
 ```
@@ -142,23 +134,24 @@ eg: "my/subfolder" or "nested".
 An optional set of tags to assign to the log files. Takes an object,
 eg: `{type: "myType"}` or `{type: "myType", project: "myProject"}`.
 
-#### access_key_id
-AWS access key ID, must have putObject permission on the specified bucket.  Can
-also be provided as the environment variable `AWS_SECRET_ACCESS_KEY`, or as any
+#### access_key_id *deprecated*
+AWS access key ID, must have putObject permission on the specified bucket.  Provide
+credentials through the environment variable `AWS_ACCESS_KEY_ID`, or as any
 of the other [authentication
-methods](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html)
-supported by the AWS SDK.
+methods](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-credentials-node.html)
+supported by the AWS SDK instead.
 
-#### secret_access_key
-AWS secret key for the `access_key_id` specified.  Can also be provided as the
-environment variable `AWS_SECRET_KEY_ID`, or as any of the other
-[authentication
-methods](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html)
-supported by the AWS SDK.
+
+#### secret_access_key *deprecated*
+AWS secret key for the `access_key_id` specified.  Provide
+credentials through the environment variable `AWS_SECRET_ACCESS_KEY`, or as any
+of the other [authentication
+methods](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-credentials-node.html)
+supported by the AWS SDK instead.
 
 #### config
 
-Configuration object for the AWS SDK. The full list of options is available on the [AWS SDK Configuration Object page](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html). This is an alternative to using access_key_id and secret_access_key and is overwritten by them if both are used.
+Configuration object for the AWS SDK. The full list of options is available on the [AWS SDK Configuration page](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/global-config-object.html). This is an alternative to using access_key_id and secret_access_key and is overwritten by them if both are used.
 
 #### name_format
 Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M-%S-%L-<current git branch>-<hostname>.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
@@ -175,7 +168,7 @@ Files will be rotated every `rotate_every` milliseconds. Defaults to 3600000 (60
 minutes).
 
 #### max_file_size
-Files will be rotated when they reach `max_file_size` bytes. Defaults to 200 KB.
+Files will be rotated when they reach `max_file_size` bytes. Defaults to 200000 (i.e. 200 KB).
 
 #### upload_every
 Files will be uploaded every `upload_every` milliseconds. Defaults to 20

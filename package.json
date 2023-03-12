@@ -3,12 +3,12 @@
   "version": "1.8.0",
   "description": "Stream for logging to s3 with rotated object names. Usable as a wiston-file stream. ",
   "main": "index.js",
-  "files": {
+  "files": [
     "index.js",
     "readme.md"
-  },
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx eslint ./index.js --config eslint.json"
   },
   "repository": {
     "type": "git",
@@ -26,12 +26,11 @@
   },
   "homepage": "https://github.com/coggle/s3-streamlogger",
   "dependencies": {
-    "aws-sdk": "^2.80.0",
-    "git-branch": "~0.3.0",
-    "strftime": "~0.8.2"
+    "@aws-sdk/client-s3": "^3.289.0",
+    "git-branch": "^2.0.1",
+    "strftime": "^0.10.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-eslint": "^4.0.0"
+    "eslint": "^8.36.0"
   }
 }

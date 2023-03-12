@@ -1,10 +1,10 @@
-var stream   = require('stream');
-var util     = require('util');
-var strftime = require('strftime');
-var aws      = require('aws-sdk');
-var branch   = require('git-branch');
-var os       = require('os');
-var zlib     = require('zlib');
+const { Writable } = require('stream');
+const { inherits } = require('util');
+const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
+const { hostname } = require('node:os');
+const { gzip }     = require('node:zlib');
+const branch       = require('git-branch');
+const strftime     = require('strftime');
 
 // Constants
 
@@ -14,7 +14,7 @@ var CONTENT_TYPE_PLAIN_TEXT = "text/plain;charset=utf-8";
 // Public API
 
 function S3StreamLogger(options){
-    stream.Writable.call(this, options);
+    Writable.call(this, options);
 
     if(!(options.bucket || process.env.BUCKET_NAME))
         throw new Error("options.bucket or BUCKET_NAME environment variable is required");
@@ -63,10 +63,10 @@ function S3StreamLogger(options){
         if(this.compress){
             _extension += '.gz';
         }
-        this.name_format = `%Y-%m-%d-%H-%M-%S-%L-${_current_branch}-${os.hostname()}${_extension}`;
+        this.name_format = `%Y-%m-%d-%H-%M-%S-%L-${_current_branch}-${hostname()}${_extension}`;
     }
 
-    this.s3           = new aws.S3(options.config);
+    this.s3           = new S3Client(options.config);
     this.timeout      = null;
     this.object_name  = null;
     this.file_started = null;
@@ -76,7 +76,7 @@ function S3StreamLogger(options){
 
     this._newFile();
 }
-util.inherits(S3StreamLogger, stream.Writable);
+inherits(S3StreamLogger, Writable);
 
 // write anything outstanding to the current file, and start a new one
 S3StreamLogger.prototype.flushFile = function(cb){
@@ -85,7 +85,14 @@ S3StreamLogger.prototype.flushFile = function(cb){
 
 // Override this function to modify the parameters used when uploading to S3
 S3StreamLogger.prototype.putObject = function(param, callback) {
-    this.s3.putObject(param, callback);
+    const command = new PutObjectCommand(param);
+    this.s3.send(command)
+        .then(function(result){
+            return callback(null, result);
+        })
+        .catch(function(err){
+            return callback(err);
+        });
 }
 
 // Private API
@@ -177,7 +184,7 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
 S3StreamLogger.prototype._prepareBuffer = function(cb) {
     var buffer = Buffer.concat(this.buffers);
     if(this.compress){
-        zlib.gzip(buffer, cb);
+        gzip(buffer, cb);
     }else{
         cb(null, buffer);
     }
