@@ -125,12 +125,12 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
             return this.emit('error', err);
         }
 
-        // constructc the tagging string according to AWS SDK specifications
+        // construct the tagging string according to AWS SDK specifications
         var tagging = Object.keys(this.tags).map(function(key) {return key + '=' + this.tags[key];}, this).join('&');
 
         var param  = {
             Bucket: this.bucket,
-            Key: this.object_name,
+            Key: saved.object_name,
             Body: buffer,
             Tagging: tagging
         };
@@ -147,7 +147,7 @@ S3StreamLogger.prototype._upload = function(forceNewFile, cb) {
             param.ACL = this.acl;
         }
     
-    // Setting content type to text/plain allows log files to be 
+        // Setting content type to text/plain allows log files to be 
         // previewed natively within browsers without downloading.
         if (!this.compress) {
             param.ContentType = CONTENT_TYPE_PLAIN_TEXT;
