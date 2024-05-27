@@ -39,11 +39,12 @@ function S3StreamLogger(options){
     // Backwards compatible API changes
 
     options.config = options.config || {};
+    options.config.credentials = options.config.credentials || {};
     if(options.access_key_id) {
-      options.config.accessKeyId = options.access_key_id;
+      options.config.credentials.accessKeyId = options.access_key_id;
     }
     if(options.secret_access_key) {
-      options.config.secretAccessKey = options.secret_access_key;
+      options.config.credentials.secretAccessKey = options.secret_access_key;
     }
     if(options.config.sslEnabled === undefined) {
       options.config.sslEnabled = true;
