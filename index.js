@@ -3,7 +3,6 @@ const { inherits } = require('util');
 const { PutObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const { hostname } = require('node:os');
 const { gzip }     = require('node:zlib');
-const branch       = require('git-branch');
 const strftime     = require('strftime');
 
 // Constants
@@ -57,18 +56,11 @@ function S3StreamLogger(options){
       options.config.region = options.region;
     }
     if(!options.name_format) {
-        // Get branch and host name for default file name
-        var _current_branch;
-        try {
-            _current_branch = branch.sync();
-        } catch (e) {
-            _current_branch = 'unknown'
-        }
         var _extension = '.log';
         if(this.compress){
             _extension += '.gz';
         }
-        this.name_format = `%Y-%m-%d-%H-%M-%S-%L-${_current_branch}-${hostname()}${_extension}`;
+        this.name_format = `%Y-%m-%d-%H-%M-%S-%L-${hostname()}${_extension}`;
     }
 
     this.s3           = new S3Client(options.config);
