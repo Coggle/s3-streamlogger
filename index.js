@@ -56,11 +56,12 @@ function S3StreamLogger(options){
       options.config.region = options.region;
     }
     if(!options.name_format) {
+        // Get host name for default file name
         var _extension = '.log';
         if(this.compress){
             _extension += '.gz';
         }
-        this.name_format = `%Y-%m-%d-%H-%M-%S-%L-${hostname()}${_extension}`;
+        this.name_format = `%Y-%m-%d-%H-%M-%S-%L-unknown-${hostname()}${_extension}`;
     }
 
     this.s3           = new S3Client(options.config);
