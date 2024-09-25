@@ -154,7 +154,7 @@ supported by the AWS SDK instead.
 Configuration object for the AWS SDK. The full list of options is available on the [AWS SDK Configuration page](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/global-config-object.html). This is an alternative to using access_key_id and secret_access_key and is overwritten by them if both are used.
 
 #### name_format
-Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M-%S-%L-<current git branch>-<hostname>.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
+Format of file names to create, accepts [strftime specifiers](https://github.com/samsonjs/strftime). Defaults to `"%Y-%m-%d-%H-%M-%S-%L-unknown-<hostname>.log"`. The Date() used to fill the format specifiers is created with the current UTC time, but still *has the current timezone*, so any specifiers that perform timezone conversion will return incorrect dates.
 
 If you use a format of the form `%Y-%m-%d-%H-%M-<stage>-<hostname>.log`, then
 you can use [tails3](http://github.com/coggle/tails3) to tail the log files
