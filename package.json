@@ -30,6 +30,7 @@
     "strftime": "^0.10.2"
   },
   "devDependencies": {
-    "eslint": "^8.42.0"
+    "eslint": "^8.42.0",
+    "typescript": "^5.4.5"
   }
 }
