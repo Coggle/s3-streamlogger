@@ -194,6 +194,11 @@ Defaults to no ACL.
 If true, the files will be gzipped before uploading (may reduce s3 storage costs).
 Defaults to false.
 
-### License
+## Changelog
+ * **1.11.0**: Adds typescript definitions.
+ * **1.10.1**: Corrects readme.
+ * **1.10.0**: Removes use of deprecated git-branch module. The default filename format no longer includes the git branch name.
+
+## License
 [ISC](http://opensource.org/licenses/ISC): equivalent to 2-clause BSD.
 
