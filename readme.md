@@ -195,6 +195,7 @@ If true, the files will be gzipped before uploading (may reduce s3 storage costs
 Defaults to false.
 
 ## Changelog
+ * **1.11.1**: Include typescript definitions in the files published to npm.
  * **1.11.0**: Adds typescript definitions.
  * **1.10.1**: Corrects readme.
  * **1.10.0**: Removes use of deprecated git-branch module. The default filename format no longer includes the git branch name.
